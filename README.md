@@ -1,5 +1,4 @@
-# flat [![Build Status](https://secure.travis-ci.org/hughsk/flat.png?branch=master)](http://travis-ci.org/hughsk/flat)
-
+# flat [![Build Status](https://secure.travis-ci.org/thurt/flat.png?branch=master)](http://travis-ci.org/thurt/flat) [![codecov.io](https://codecov.io/github/thurt/flat/coverage.svg?branch=master)](https://codecov.io/github/thurt/flat?branch=master) [![js-standard-style](https://camo.githubusercontent.com/3c9082cfba1231e4340eee8c17fefc5ee24d5e2f/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d7374616e646172642d627269676874677265656e2e737667)](http://standardjs.com/)
 Take a nested Javascript object and flatten it, or unflatten an object with
 delimited keys.
 

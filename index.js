@@ -1,8 +1,10 @@
-var flat = module.exports = flatten
-flatten.flatten = flatten
-flatten.unflatten = unflatten
+var flat = flatten
+flat.flatten = flatten
+flat.unflatten = unflatten
 
-function flatten(target, opts) {
+module.exports = flat
+
+function flatten (target, opts) {
   opts = opts || {}
 
   var delimiter = opts.delimiter || '.'
@@ -10,15 +12,15 @@ function flatten(target, opts) {
   var currentDepth = 1
   var output = {}
 
-  function step(object, prev) {
-    Object.keys(object).forEach(function(key) {
+  function step (object, prev) {
+    Object.keys(object).forEach(function (key) {
       var value = object[key]
       var isarray = opts.safe && Array.isArray(value)
       var type = Object.prototype.toString.call(value)
       var isbuffer = isBuffer(value)
       var isobject = (
-        type === "[object Object]" ||
-        type === "[object Array]"
+        type === '[object Object]' ||
+        type === '[object Array]'
       )
 
       var newKey = prev
@@ -26,7 +28,7 @@ function flatten(target, opts) {
         : key
 
       if (!opts.maxDepth) {
-        maxDepth = currentDepth + 1;
+        maxDepth = currentDepth + 1
       }
 
       if (!isarray && !isbuffer && isobject && Object.keys(value).length && currentDepth < maxDepth) {
@@ -43,7 +45,7 @@ function flatten(target, opts) {
   return output
 }
 
-function unflatten(target, opts) {
+function unflatten (target, opts) {
   opts = opts || {}
 
   var delimiter = opts.delimiter || '.'
@@ -57,7 +59,7 @@ function unflatten(target, opts) {
 
   // safely ensure that the key is
   // an integer.
-  function getkey(key) {
+  function getkey (key) {
     var parsedKey = Number(key)
 
     return (
@@ -67,7 +69,7 @@ function unflatten(target, opts) {
       : parsedKey
   }
 
-  Object.keys(target).forEach(function(key) {
+  Object.keys(target).forEach(function (key) {
     var split = key.split(delimiter)
     var key1 = getkey(split.shift())
     var key2 = getkey(split[0])
@@ -76,8 +78,8 @@ function unflatten(target, opts) {
     while (key2 !== undefined) {
       var type = Object.prototype.toString.call(recipient[key1])
       var isobject = (
-        type === "[object Object]" ||
-        type === "[object Array]"
+        type === '[object Object]' ||
+        type === '[object Array]'
       )
 
       if ((overwrite && !isobject) || (!overwrite && recipient[key1] === undefined)) {
@@ -101,7 +103,9 @@ function unflatten(target, opts) {
   return result
 }
 
-function isBuffer(value) {
+function isBuffer (value) {
   if (typeof Buffer === 'undefined') return false
   return Buffer.isBuffer(value)
 }
+
+module.exports = flatten

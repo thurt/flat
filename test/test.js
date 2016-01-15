@@ -1,22 +1,23 @@
+/* global suite, test */
 var assert = require('assert')
-  , flat = require('../index')
-  , flatten = flat.flatten
-  , unflatten = flat.unflatten
+var flat = require('../index')
+var flatten = flat.flatten
+var unflatten = flat.unflatten
 
 var primitives = {
-    String: 'good morning'
-  , Number: 1234.99
-  , Boolean: true
-  , Date: new Date
-  , null: null
-  , undefined: undefined
+  String: 'good morning',
+  Number: 1234.99,
+  Boolean: true,
+  Date: new Date(),
+  null: null,
+  undefined: undefined
 }
 
-suite('Flatten Primitives', function() {
-  Object.keys(primitives).forEach(function(key) {
+suite('Flatten Primitives', function () {
+  Object.keys(primitives).forEach(function (key) {
     var value = primitives[key]
 
-    test(key, function() {
+    test(key, function () {
       assert.deepEqual(flatten({
         hello: {
           world: value
@@ -28,11 +29,11 @@ suite('Flatten Primitives', function() {
   })
 })
 
-suite('Unflatten Primitives', function() {
-  Object.keys(primitives).forEach(function(key) {
+suite('Unflatten Primitives', function () {
+  Object.keys(primitives).forEach(function (key) {
     var value = primitives[key]
 
-    test(key, function() {
+    test(key, function () {
       assert.deepEqual(unflatten({
         'hello.world': value
       }), {
@@ -44,8 +45,8 @@ suite('Unflatten Primitives', function() {
   })
 })
 
-suite('Flatten', function() {
-  test('Nested once', function() {
+suite('Flatten', function () {
+  test('Nested once', function () {
     assert.deepEqual(flatten({
       hello: {
         world: 'good morning'
@@ -55,7 +56,7 @@ suite('Flatten', function() {
     })
   })
 
-  test('Nested twice', function() {
+  test('Nested twice', function () {
     assert.deepEqual(flatten({
       hello: {
         world: {
@@ -67,7 +68,7 @@ suite('Flatten', function() {
     })
   })
 
-  test('Multiple Keys', function() {
+  test('Multiple Keys', function () {
     assert.deepEqual(flatten({
       hello: {
         lorem: {
@@ -89,7 +90,7 @@ suite('Flatten', function() {
     })
   })
 
-  test('Custom Delimiter', function() {
+  test('Custom Delimiter', function () {
     assert.deepEqual(flatten({
       hello: {
         world: {
@@ -103,43 +104,47 @@ suite('Flatten', function() {
     })
   })
 
-  test('Empty Objects', function() {
+  test('Empty Objects', function () {
     assert.deepEqual(flatten({
       hello: {
         empty: {
-          nested: { }
+          nested: {}
         }
       }
     }), {
-      'hello.empty.nested': { }
+      'hello.empty.nested': {}
     })
   })
 
-  if (typeof Buffer !== 'undefined') test('Buffer', function() {
-    assert.deepEqual(flatten({
-      hello: {
-        empty: {
-          nested: new Buffer('test')
+  if (typeof Buffer !== 'undefined') {
+    test('Buffer', function () {
+      assert.deepEqual(flatten({
+        hello: {
+          empty: {
+            nested: new Buffer('test')
+          }
         }
-      }
-    }), {
-      'hello.empty.nested': new Buffer('test')
+      }), {
+        'hello.empty.nested': new Buffer('test')
+      })
     })
-  })
+  }
 
-  if (typeof Uint8Array !== 'undefined') test('typed arrays', function() {
-    assert.deepEqual(flatten({
-      hello: {
-        empty: {
-          nested: new Uint8Array([1,2,3,4])
+  if (typeof Uint8Array !== 'undefined') {
+    test('typed arrays', function () {
+      assert.deepEqual(flatten({
+        hello: {
+          empty: {
+            nested: new Uint8Array([1, 2, 3, 4])
+          }
         }
-      }
-    }), {
-      'hello.empty.nested': new Uint8Array([1,2,3,4])
+      }), {
+        'hello.empty.nested': new Uint8Array([1, 2, 3, 4])
+      })
     })
-  })
+  }
 
-  test('Custom Depth', function() {
+  test('Custom Depth', function () {
     assert.deepEqual(flatten({
       hello: {
         world: {
@@ -156,8 +161,8 @@ suite('Flatten', function() {
   })
 })
 
-suite('Unflatten', function() {
-  test('Nested once', function() {
+suite('Unflatten', function () {
+  test('Nested once', function () {
     assert.deepEqual({
       hello: {
         world: 'good morning'
@@ -167,7 +172,7 @@ suite('Unflatten', function() {
     }))
   })
 
-  test('Nested twice', function() {
+  test('Nested twice', function () {
     assert.deepEqual({
       hello: {
         world: {
@@ -179,7 +184,7 @@ suite('Unflatten', function() {
     }))
   })
 
-  test('Multiple Keys', function() {
+  test('Multiple Keys', function () {
     assert.deepEqual({
       hello: {
         lorem: {
@@ -201,7 +206,7 @@ suite('Unflatten', function() {
     }))
   })
 
-  test('Custom Delimiter', function() {
+  test('Custom Delimiter', function () {
     assert.deepEqual({
       hello: {
         world: {
@@ -215,36 +220,53 @@ suite('Unflatten', function() {
     }))
   })
 
-  test('Overwrite', function() {
+  test('Overwrite', function () {
     assert.deepEqual({
       travis: {
         build: {
-          dir: "/home/travis/build/kvz/environmental"
+          dir: '/home/travis/build/kvz/environmental'
         }
       }
-    }, unflatten({
-      travis: "true",
-      travis_build_dir: "/home/travis/build/kvz/environmental"
+    },
+    unflatten({
+      travis: 'true',
+      travis_build_dir: '/home/travis/build/kvz/environmental'
     }, {
       delimiter: '_',
-      overwrite: true,
+      overwrite: true
     }))
   })
 
-  test('Messy', function() {
+  test('Messy', function () {
     assert.deepEqual({
-      hello: { world: 'again' },
-      lorem: { ipsum: 'another' },
+      hello: {
+        world: 'again'
+      },
+      lorem: {
+        ipsum: 'another'
+      },
       good: {
         morning: {
           hash: {
-            key: { nested: {
-              deep: { and: { even: {
-                deeper: { still: 'hello' }
-              } } }
-            } }
+            key: {
+              nested: {
+                deep: {
+                  and: {
+                    even: {
+                      deeper: {
+                        still: 'hello'
+                      }
+                    }
+                  }
+                }
+              }
+            }
           },
-          again: { testing: { 'this': 'out' } }
+          again: {
+            testing: {
+              'this': 'out'
+            }
+          }
         }
       }
     }, unflatten({
@@ -263,68 +285,87 @@ suite('Unflatten', function() {
     }))
   })
 
-  suite('.safe', function() {
-    test('Should protect arrays when true', function() {
+  suite('.safe', function () {
+    test('Should protect arrays when true', function () {
       assert.deepEqual(flatten({
-        hello: [
-            { world: { again: 'foo' } }
-          , { lorem: 'ipsum' }
-        ]
-        , another: {
-          nested: [{ array: { too: 'deep' }}]
-        }
-        , lorem: {
+        hello: [{
+          world: {
+            again: 'foo'
+          }
+        }, {
+          lorem: 'ipsum'
+        }],
+        another: {
+          nested: [{
+            array: {
+              too: 'deep'
+            }
+          }]
+        },
+        lorem: {
           ipsum: 'whoop'
         }
       }, {
         safe: true
       }), {
-        hello: [
-            { world: { again: 'foo' } }
-          , { lorem: 'ipsum' }
-        ]
-        , 'lorem.ipsum': 'whoop'
-        , 'another.nested': [{ array: { too: 'deep' }}]
+        hello: [{
+          world: {
+            again: 'foo'
+          }
+        }, {
+          lorem: 'ipsum'
+        }],
+        'lorem.ipsum': 'whoop',
+        'another.nested': [{
+          array: {
+            too: 'deep'
+          }
+        }]
       })
     })
 
-    test('Should not protect arrays when false', function() {
+    test('Should not protect arrays when false', function () {
       assert.deepEqual(flatten({
-        hello: [
-            { world: { again: 'foo' } }
-          , { lorem: 'ipsum' }
-        ]
+        hello: [{
+          world: {
+            again: 'foo'
+          }
+        }, {
+          lorem: 'ipsum'
+        }]
       }, {
         safe: false
       }), {
-          'hello.0.world.again': 'foo'
-        , 'hello.1.lorem': 'ipsum'
+        'hello.0.world.again': 'foo',
+        'hello.1.lorem': 'ipsum'
       })
     })
   })
 
-  suite('.object', function() {
-    test('Should create object instead of array when true', function() {
+  suite('.object', function () {
+    test('Should create object instead of array when true', function () {
       var unflattened = unflatten({
         'hello.you.0': 'ipsum',
         'hello.you.1': 'lorem',
         'hello.other.world': 'foo'
       }, {
         object: true
-      });
+      })
       assert.deepEqual({
         hello: {
           you: {
             0: 'ipsum',
-            1: 'lorem',
+            1: 'lorem'
           },
-          other: { world: 'foo' }
+          other: {
+            world: 'foo'
+          }
         }
-      }, unflattened);
-      assert(!Array.isArray(unflattened.hello.you));
+      }, unflattened)
+      assert(!Array.isArray(unflattened.hello.you))
     })
 
-    test('Should create object instead of array when nested', function() {
+    test('Should create object instead of array when nested', function () {
       var unflattened = unflatten({
         'hello': {
           'you.0': 'ipsum',
@@ -333,93 +374,100 @@ suite('Unflatten', function() {
         }
       }, {
         object: true
-      });
+      })
       assert.deepEqual({
         hello: {
           you: {
             0: 'ipsum',
-            1: 'lorem',
+            1: 'lorem'
           },
-          other: { world: 'foo' }
+          other: {
+            world: 'foo'
+          }
         }
-      }, unflattened);
-      assert(!Array.isArray(unflattened.hello.you));
+      }, unflattened)
+      assert(!Array.isArray(unflattened.hello.you))
     })
 
-    test('Should not create object when false', function() {
+    test('Should not create object when false', function () {
       var unflattened = unflatten({
         'hello.you.0': 'ipsum',
         'hello.you.1': 'lorem',
         'hello.other.world': 'foo'
       }, {
         object: false
-      });
+      })
       assert.deepEqual({
         hello: {
           you: ['ipsum', 'lorem'],
-          other: { world: 'foo' }
+          other: {
+            world: 'foo'
+          }
         }
-      }, unflattened);
-      assert(Array.isArray(unflattened.hello.you));
-    })
-
-  })
-
-  if (typeof Buffer !== 'undefined') test('Buffer', function() {
-    assert.deepEqual(unflatten({
-      'hello.empty.nested': new Buffer('test')
-    }), {
-      hello: {
-        empty: {
-          nested: new Buffer('test')
-        }
-      }
+      }, unflattened)
+      assert(Array.isArray(unflattened.hello.you))
     })
   })
 
-  if (typeof Uint8Array !== 'undefined') test('typed arrays', function() {
-    assert.deepEqual(unflatten({
-      'hello.empty.nested': new Uint8Array([1,2,3,4])
-    }), {
-      hello: {
-        empty: {
-          nested: new Uint8Array([1,2,3,4])
+  if (typeof Buffer !== 'undefined') {
+    test('Buffer', function () {
+      assert.deepEqual(unflatten({
+        'hello.empty.nested': new Buffer('test')
+      }), {
+        hello: {
+          empty: {
+            nested: new Buffer('test')
+          }
         }
-      }
+      })
     })
-  })
+  }
+
+  if (typeof Uint8Array !== 'undefined') {
+    test('typed arrays', function () {
+      assert.deepEqual(unflatten({
+        'hello.empty.nested': new Uint8Array([1, 2, 3, 4])
+      }), {
+        hello: {
+          empty: {
+            nested: new Uint8Array([1, 2, 3, 4])
+          }
+        }
+      })
+    })
+  }
 })
 
-suite('Arrays', function() {
-  test('Should be able to flatten arrays properly', function() {
+suite('Arrays', function () {
+  test('Should be able to flatten arrays properly', function () {
     assert.deepEqual({
-        'a.0': 'foo'
-      , 'a.1': 'bar'
+      'a.0': 'foo',
+      'a.1': 'bar'
     }, flatten({
       a: ['foo', 'bar']
     }))
   })
 
-  test('Should be able to revert and reverse array serialization via unflatten', function() {
+  test('Should be able to revert and reverse array serialization via unflatten', function () {
     assert.deepEqual({
       a: ['foo', 'bar']
     }, unflatten({
-        'a.0': 'foo'
-      , 'a.1': 'bar'
+      'a.0': 'foo',
+      'a.1': 'bar'
     }))
   })
 
   test('Array typed objects should be restored by unflatten', function () {
     assert.equal(
-        Object.prototype.toString.call(['foo', 'bar'])
-      , Object.prototype.toString.call(unflatten({
-          'a.0': 'foo'
-        , 'a.1': 'bar'
+      Object.prototype.toString.call(['foo', 'bar']),
+      Object.prototype.toString.call(unflatten({
+        'a.0': 'foo',
+        'a.1': 'bar'
       }).a)
     )
   })
 
-  test('Do not include keys with numbers inside them', function() {
+  test('Do not include keys with numbers inside them', function () {
     assert.deepEqual(unflatten({
       '1key.2_key': 'ok'
     }), {

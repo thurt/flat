@@ -1,17 +1,19 @@
 {
   "name": "flat",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -u tdd --reporter spec"
+    "lint": "standard",
+    "coverage": "istanbul cover ./node_modules/.bin/_mocha -- -u tdd -R spec",
+    "test": "npm run lint && npm run coverage"
   },
   "license": "BSD-3-Clause",
   "description": "Take a nested Javascript object and flatten it, or unflatten an object with delimited keys",
   "devDependencies": {
-    "mocha": "~1.6.0"
-  },
-  "directories": {
-    "test": "test"
+    "codecov.io": "=0.1.6",
+    "istanbul": "=0.4.2",
+    "mocha": "=2.3.4",
+    "standard": "=5.4.1"
   },
   "dependencies": {},
   "repository": {
@@ -28,6 +30,9 @@
     "nested"
   ],
   "author": "Hugh Kennedy <hughskennedy@gmail.com> (http://hughskennedy.com)",
+  "contributors": [
+      "Taylor Hurt <taylor.a.hurt@gmail.com> (https://github.com/thurt)"
+    ],
   "bugs": {
     "url": "https://github.com/hughsk/flat/issues"
   },
