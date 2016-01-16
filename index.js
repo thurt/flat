@@ -4,11 +4,25 @@ flat.unflatten = unflatten
 
 module.exports = flat
 
-function flatten (target, opts) {
-  opts = opts || {}
+flatten.getDefaults = function () {
+  return {
+    delimiter: '.',
+    maxDepth: Number.MAX_VALUE,
+    safe: false
+  }
+}
 
-  var delimiter = opts.delimiter || '.'
-  var maxDepth = opts.maxDepth
+unflatten.getDefaults = function () {
+  return {
+    delimiter: '.',
+    overwrite: false,
+    object: false
+  }
+}
+
+function flatten (target, opts) {
+  opts = Object.assign(flatten.getDefaults(), opts)
+
   var currentDepth = 1
   var output = {}
 
@@ -24,14 +38,10 @@ function flatten (target, opts) {
       )
 
       var newKey = prev
-        ? prev + delimiter + key
+        ? prev + opts.delimiter + key
         : key
 
-      if (!opts.maxDepth) {
-        maxDepth = currentDepth + 1
-      }
-
-      if (!isarray && !isbuffer && isobject && Object.keys(value).length && currentDepth < maxDepth) {
+      if (!isarray && !isbuffer && isobject && Object.keys(value).length && currentDepth < opts.maxDepth) {
         ++currentDepth
         return step(value, newKey)
       }
@@ -40,16 +50,14 @@ function flatten (target, opts) {
     })
   }
 
-  step(target)
+  step(target, undefined)
 
   return output
 }
 
 function unflatten (target, opts) {
-  opts = opts || {}
+  opts = Object.assign(unflatten.getDefaults(), opts)
 
-  var delimiter = opts.delimiter || '.'
-  var overwrite = opts.overwrite || false
   var result = {}
 
   var isbuffer = isBuffer(target)
@@ -70,7 +78,7 @@ function unflatten (target, opts) {
   }
 
   Object.keys(target).forEach(function (key) {
-    var split = key.split(delimiter)
+    var split = key.split(opts.delimiter)
     var key1 = getkey(split.shift())
     var key2 = getkey(split[0])
     var recipient = result
@@ -82,7 +90,7 @@ function unflatten (target, opts) {
         type === '[object Array]'
       )
 
-      if ((overwrite && !isobject) || (!overwrite && recipient[key1] === undefined)) {
+      if ((opts.overwrite && !isobject) || (!opts.overwrite && recipient[key1] === undefined)) {
         recipient[key1] = (
           typeof key2 === 'number' &&
           !opts.object ? [] : {}
@@ -107,5 +115,3 @@ function isBuffer (value) {
   if (typeof Buffer === 'undefined') return false
   return Buffer.isBuffer(value)
 }
-
-module.exports = flatten
