@@ -1,4 +1,4 @@
-# flat [![Build Status](https://secure.travis-ci.org/thurt/flat.png?branch=master)](http://travis-ci.org/thurt/flat) [![codecov.io](https://codecov.io/github/thurt/flat/coverage.svg?branch=master)](https://codecov.io/github/thurt/flat?branch=master) [![js-standard-style](https://camo.githubusercontent.com/3c9082cfba1231e4340eee8c17fefc5ee24d5e2f/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d7374616e646172642d627269676874677265656e2e737667)](http://standardjs.com/)
+# flat [![Build Status](https://secure.travis-ci.org/thurt/flat.png?branch=master)](http://travis-ci.org/thurt/flat) [![codecov.io](https://codecov.io/github/thurt/flat/coverage.svg?branch=devel)](https://codecov.io/github/thurt/flat?branch=devel) [![js-standard-style](https://camo.githubusercontent.com/3c9082cfba1231e4340eee8c17fefc5ee24d5e2f/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d7374616e646172642d627269676874677265656e2e737667)](http://standardjs.com/)
 Take a nested Javascript object and flatten it, or unflatten an object with
 delimited keys.
 
@@ -133,27 +133,43 @@ Without `overwrite` set to `true`, the `TRAVIS` key would already have been set 
 
 This only makes sense on ordered arrays, and since we're overwriting data, should be used with care.
 
+### `objectEnpoints: true || false`
 
-### maxDepth
+**flat** *IN*
+```javascript
+{
+  a: {
+    b: {
+      c: 1
+    }
+  }
+}
+```
+**flat** *OUT*
+```javascript
+{
+  a: null,
+  'a.b': null,
+  'a.b.c': 1
+}
+```
 
-Maximum number of nested objects to flatten.
+### `maxDepth: n`
 
+**flat** *IN*
 ``` javascript
-var flatten = require('flat')
-
-flatten({
-    key1: {
-        keyA: 'valueI'
-    },
-    key2: {
-        keyB: 'valueII'
-    },
-    key3: { a: { b: { c: 2 } } }
-}, { maxDepth: 2 })
-
-// {
-//   'key1.keyA': 'valueI',
-//   'key2.keyB': 'valueII',
-//   'key3.a': { b: { c: 2 } }
-// }
+-> maxDepth: 2
+{
+  a: { b: 1 },
+  c: { d: 2 },
+  e: { f: { g: { h: 3 } } }
+}
+```
+**flat** *OUT*
+```javascript
+{
+  'a.b': 1,
+  'c.d': 2,
+  'e.f': { g: { h: 3 } }
+}
 ```

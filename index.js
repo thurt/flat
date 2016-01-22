@@ -1,3 +1,6 @@
+'use strict'
+// var l = require('basic-log')
+
 var flat = flatten
 flat.flatten = flatten
 flat.unflatten = unflatten
@@ -8,7 +11,8 @@ flatten.getDefaults = function () {
   return {
     delimiter: '.',
     maxDepth: Number.MAX_VALUE,
-    safe: false
+    safe: false,
+    objectEnpoints: false
   }
 }
 
@@ -33,7 +37,7 @@ function flatten (target, opts) {
       var type = Object.prototype.toString.call(value)
       var isbuffer = isBuffer(value)
       var isobject = (
-        type === '[object Object]' ||
+      type === '[object Object]' ||
         type === '[object Array]'
       )
 
@@ -52,7 +56,26 @@ function flatten (target, opts) {
 
   step(target, undefined)
 
+  if (opts.objectEnpoints) {
+    output = addObjectEnpoints(output, opts)
+  }
   return output
+}
+
+function addObjectEnpoints (obj, opts) {
+  var outpt = obj
+  for (var key in obj) {
+    var parse = key.split(opts.delimiter)
+    if (parse.length > 1) {
+      for (let i = 1; i < parse.length; i++) {
+        let parse_concat = parse.slice(0, i).join('.')
+        if (!outpt[parse_concat]) {
+          outpt[parse_concat] = null
+        }
+      }
+    }
+  }
+  return outpt
 }
 
 function unflatten (target, opts) {
@@ -71,9 +94,9 @@ function unflatten (target, opts) {
     var parsedKey = Number(key)
 
     return (
-      isNaN(parsedKey) ||
-      key.indexOf('.') !== -1
-    ) ? key
+    isNaN(parsedKey) ||
+    key.indexOf('.') !== -1
+      ) ? key
       : parsedKey
   }
 
@@ -86,7 +109,7 @@ function unflatten (target, opts) {
     while (key2 !== undefined) {
       var type = Object.prototype.toString.call(recipient[key1])
       var isobject = (
-        type === '[object Object]' ||
+      type === '[object Object]' ||
         type === '[object Array]'
       )
 
